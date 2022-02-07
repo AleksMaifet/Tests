@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Domain</title>
+</head>
+<body>
+<h3> Second domain Window </h3>
+<div id="message"></div>
+<script>
+
+	(() => {
+
+			const ORIGIN_URL = 'http://localhost:63342'
+
+			const storageAPI = {
+
+				SENT: (data) => {
+					const {key, value, action} = data;
+					localStorage.setItem(key, value);
+					console.log(action);
+				},
+
+				REMOVED: (data) => {
+					const {key, action} = data;
+					localStorage.removeItem(key);
+					console.log(action);
+				},
+
+				READ: (data) => {
+					const textLocalStorage = localStorage.getItem(data.key);
+					console.log(textLocalStorage);
+				}
+
+			};
+
+			const listener = (e) => {
+				const {data, data: {action, success}, origin, source} = e;
+				if (origin !== ORIGIN_URL) return;
+				const API = action.toUpperCase();
+				if (storageAPI[API]) storageAPI[API](data);
+				source.postMessage(success, origin);
+			}
+			window.addEventListener("message", listener);
+		}
+	)()
+
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Domain</title>
+</head>
+<body>
+<h1> domain one </h1>
+<p>
+    <input type="text" id="input-id">
+    <button id="sent">Send</button>
+    <button id="removed">Delete</button>
+    <button id="read">Read</button>
+</p>
+<iframe id="receiver"
+        src="http://localhost:63342/Res/Tasks%204-5/domainSecond.html?_ijt=vcvj4aetsp2f1fl57i6jgs4jv&_ij_reload=RELOAD_ON_SAVE">
+    <p>Ваш браузер не поддерживает iframe.</p>
+</iframe>
+<script>
+
+	(() => {
+
+			const service = {
+				URL: 'http://localhost:63342/Res/Tasks%204-5/domainSecond.html?_ijt=vcvj4aetsp2f1fl57i6jgs4jv&_ij_reload=RELOAD_ON_SAVE',
+				LOCAL_STORAGE_KEY: '3',
+				SUCCESS_NAME_CALLBACK: 'Callback',
+				CALLBACK_MESSAGE: 'Checked console!',
+				INVALID_CALLBACK_MESSAGE: "Invalid callback",
+				receiver: document.getElementById('receiver').contentWindow,
+				buttons: document.querySelectorAll('button'),
+				input: document.getElementById('input-id'),
+				objMessage: {},
+			}
+
+			const {
+				objMessage,
+				receiver,
+				URL,
+				LOCAL_STORAGE_KEY,
+				buttons,
+				input,
+				SUCCESS_NAME_CALLBACK,
+				CALLBACK_MESSAGE,
+				INVALID_CALLBACK_MESSAGE,
+			} = service
+
+			const multiMessage = (e) => {
+				const buttonId = e.currentTarget.id;
+				objMessage.action = buttonId;
+				objMessage.key = LOCAL_STORAGE_KEY;
+				objMessage.value = input.value;
+				objMessage.success = `${buttonId}${SUCCESS_NAME_CALLBACK}`;
+				receiver.postMessage(objMessage, URL);
+			}
+
+			buttons.forEach(e => e.addEventListener('click', multiMessage));
+
+			window.addEventListener('message', () => {
+				try {
+					alert(CALLBACK_MESSAGE);
+				} catch (err) {
+					new Error(INVALID_CALLBACK_MESSAGE);
+				}
+			});
+		}
+	)()
+
+</script>
+</body>
+</html>

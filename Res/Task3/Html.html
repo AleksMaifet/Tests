@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<p> Запросы в консоли</p>
+<script>
+
+	const selectItems = {
+		urlFirst: 'https://reqres.in/api/users?per_page=12',
+		urlSecond: 'https://reqres.in/api/users?per_page=12'
+	};
+
+	const stringsNameObj = {
+		ERROR: 'Ошибка',
+		RESP_MESSAGE: 'оба ответа получены',
+	}
+
+	const {urlFirst, urlSecond} = selectItems
+	const {ERROR, RESP_MESSAGE} = stringsNameObj
+
+	const getItem = (url) => {
+		return new Promise((res, rej) => {
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', url);
+			xhr.send();
+			xhr.onload = () => {
+				if (xhr.status !== 200) rej(`${ERROR} ${xhr.status}: ${xhr.statusText}`)
+				res(xhr);
+			};
+		})
+	}
+
+	Promise.all([getItem(urlFirst), getItem(urlSecond)])
+		.then((res) => console.log(res, RESP_MESSAGE));
+
+</script>
+</body>
+</html>
